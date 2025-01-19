@@ -67,7 +67,7 @@ const DefaulHeader2 = () => {
               Login / Register
             </a>
             <Link
-              href="/employers-dashboard/post-jobs"
+              href="/candidates-dashboard/my-profile"
               className="theme-btn btn-style-one"
             >
               Job Post

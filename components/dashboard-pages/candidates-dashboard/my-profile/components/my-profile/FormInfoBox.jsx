@@ -3,7 +3,7 @@
 // import Select from "react-select";
 import { useState } from 'react';
 import Image from 'next/image';
-
+import {CalendarDate, parseDate} from "@internationalized/date";
 import Select from "react-select";
 import countries from "world-countries";
 
@@ -328,10 +328,9 @@ const FormInfoBox = () => {
             <label>Gender*</label>
             <Select options={genderOptions} name="gender" required />
           </div>
-          <div className="form-group col-lg-6 col-md-12">
-            <label>Date of Birth*</label>
-            <input type="date" name="dob" required />
-          </div>
+          {/* <div className="w-full max-w-xl flex flex-row gap-4">
+            <DatePicker showMonthAndYearPickers label="Birth Date" variant="bordered" />
+          </div> */}
           {/* <div className="form-group col-lg-6 col-md-12">
               <label>Country</label>
               <select className="chosen-single form-select" required>

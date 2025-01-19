@@ -2,14 +2,14 @@
 
 import Select from "react-select";
 import { useState } from 'react';
+import Image from 'next/image';
 
 const FormInfoBox = () => {
   //profile photo
-  const [logImg, setLogoImg] = useState("");
-    const logImgHander = (e) => {
-        setLogoImg(e.target.files[0]);
-    };
-
+  const [invalidFields, setInvalidFields] = useState([]);
+  const [logoImg, setLogoImg] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState('');
+  
   //profile details
   const specializationOptions = [
     { value: "Data Science", label: "Data Science" },
@@ -29,6 +29,15 @@ const FormInfoBox = () => {
     { value: "Other", label: "Other" },
   ];
 
+  const logoImgHandler = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setLogoImg(file);
+      // Create preview URL
+      const objectUrl = URL.createObjectURL(file);
+      setPreviewUrl(objectUrl);
+    }
+  };
   const bloodGroupOptions = [
     { value: "A+", label: "A+" },
     { value: "B+", label: "B+" },
@@ -116,32 +125,113 @@ const FormInfoBox = () => {
     // Submit the form data (send it to a server or use as needed)
   };
 
+  const handleDeletePhoto = () => {
+    setLogoImg(null);
+    setPreviewUrl('');
+    // Reset the file input
+    const fileInput = document.getElementById('upload');
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  };
+
   return (
     <>
-    <div className="uploading-outer">
-                <div className="uploadButton">
-                    <input
-                        className="uploadButton-input"
-                        type="file"
-                        name="attachments[]"
-                        accept="image/*"
-                        id="upload"
-                        required
-                        onChange={logImgHander}
-                    />
-                    <label
-                        className="uploadButton-button ripple-effect"
-                        htmlFor="upload"
-                    >
-                        {logImg !== "" ? logImg.name : "Profile Picture"}
-                    </label>
-                    <span className="uploadButton-file-name"></span>
+    {<div className="uploading-outer">
+        <div className="uploadButton" style={{ marginBottom: '20px' }}>
+          <input
+            className="uploadButton-input"
+            type="file"
+            name="attachments[]"
+            accept="image/*"
+            id="upload"
+            required
+            onChange={logoImgHandler}
+          />
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+            <label
+              className="uploadButton-button ripple-effect"
+              htmlFor="upload"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '200px', // Increased size
+                width: '200px', // Increased size
+                border: '1px dashed #ccc',
+                borderRadius: '8px',
+                overflow: 'hidden',
+                position: 'relative',
+                cursor: 'pointer'
+              }}
+            >
+              {previewUrl ? (
+                <img 
+                  src={previewUrl}
+                  alt="Profile Preview" 
+                  style={{ 
+                    width: '100%', 
+                    height: '100%', 
+                    objectFit: 'cover',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0
+                  }}
+                />
+              ) : (
+                <div style={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  alignItems: 'center',
+                  gap: '10px'
+                }}>
+                  <span>Profile Picture</span>
                 </div>
-                <div className="text">
-                    Max file size is 1MB, Minimum dimension: 330x300 And
-                    Suitable files are .jpg & .png
-                </div>
-            </div>
+              )}
+            </label>
+            
+            {previewUrl && (
+              <div style={{ 
+                display: 'flex', 
+                gap: '10px', 
+                marginTop: '10px'
+              }}>
+                <label
+                  htmlFor="upload"
+                  className="theme-btn btn-style-one"
+                  style={{
+                    padding: '8px 16px',
+                    fontSize: '14px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Change
+                </label>
+                <button
+                  type="button"
+                  onClick={handleDeletePhoto}
+                  className="theme-btn btn-style-three"
+                  style={{
+                    padding: '8px 16px',
+                    fontSize: '14px',
+                    backgroundColor: '#ff4444',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="text" style={{ textAlign: 'center', marginBottom: '20px', marginLeft: '50px' }}>
+          Max file size is 1MB, Minimum dimension: 330x300 And <br/>
+          Suitable files are .jpg & .png
+        </div>
+      </div> }
     <form action="#" className="default-form">
       <div className="row">
         {/* BASIC DETAILS */}
@@ -151,7 +241,8 @@ const FormInfoBox = () => {
         <br />
         <div className="form-group col-lg-4 col-md-12">
           <label>First Name*</label>
-          <input type="text" name="firstName" required />
+          <input type="text" name="firstName" required
+           />
         </div>
         <div className="form-group col-lg-4 col-md-12">
           <label>Middle Name*</label>
